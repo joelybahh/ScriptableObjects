@@ -5,7 +5,9 @@ using UnityEngine;
 
 public enum eAttribTypes {
     STACK,
-    DAMAGE
+    DAMAGE,
+    IMAGE,
+    OBJECT
 };
 
 public class AddInventoryItem {
@@ -30,11 +32,13 @@ public class AddInventoryItem {
         return item;
     }
 
-    public static void CreateItemAttrib(eAttribTypes type, string a_assetName, ref Item a_item) {
+    public static ItemAttribute CreateItemAttrib(eAttribTypes type, string a_assetName, ref Item a_item) {
         ItemAttribute item = null;
         switch (type) {
             case eAttribTypes.STACK: item = ScriptableObject.CreateInstance<StackableAttribute>(); break;
             case eAttribTypes.DAMAGE: item = ScriptableObject.CreateInstance<DamageAttribute>(); break;
+            case eAttribTypes.OBJECT: item = ScriptableObject.CreateInstance<ObjectAttribute>(); break;
+            case eAttribTypes.IMAGE: item = ScriptableObject.CreateInstance<ImageAttribute>(); break;
         }
 
         if (item != null) {
@@ -44,15 +48,22 @@ public class AddInventoryItem {
             EditorUtility.FocusProjectWindow();
 
             Selection.activeObject = item;
-            if(a_item != null) a_item.attributes.Add(item);
+            if (a_item != null) {
+                if(a_item.attributes == null){
+                    a_item.attributes = new List<ItemAttribute>();
+                }
+                a_item.attributes.Add(item);
+            }
 
         } else {
             Debug.LogWarning("NO TYPE DEFINED, NO ATTRIBUTE WAS ADDED");
         }
+
+        return item;
     }
 
     [MenuItem("Assets/Create/Add New Damage Attribute")]
-    public static void CreateItemDmgAttrib() {
+    public static ItemAttribute CreateItemDmgAttrib() {
         ItemAttribute item = ScriptableObject.CreateInstance<DamageAttribute>();
 
         AssetDatabase.CreateAsset(item, "Assets/Inventory/dmgAttrib.asset");
@@ -61,10 +72,12 @@ public class AddInventoryItem {
         EditorUtility.FocusProjectWindow();
 
         Selection.activeObject = item;
+
+        return item;
     }
 
     [MenuItem("Assets/Create/Add New Stackable Attribute")]
-    public static void CreateItemStackAttrib()
+    public static ItemAttribute CreateItemStackAttrib()
     {
         ItemAttribute item = ScriptableObject.CreateInstance<StackableAttribute>();
 
@@ -74,6 +87,8 @@ public class AddInventoryItem {
         EditorUtility.FocusProjectWindow();
 
         Selection.activeObject = item;
+
+        return item;
     }
 
 

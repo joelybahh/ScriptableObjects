@@ -25,3 +25,15 @@ public class DamageAttribute : ItemAttribute {
 public class StackableAttribute : ItemAttribute{
     public float maxStack;
 }
+
+[System.Serializable]
+public class ImageAttribute : ItemAttribute
+{
+    public Texture2D image;
+}
+
+[System.Serializable]
+public class ObjectAttribute : ItemAttribute
+{
+    public GameObject physRepresentation;
+}
